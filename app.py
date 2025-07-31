@@ -6,8 +6,12 @@ st.set_page_config(page_title="니체 롤플레잉 챗봇", page_icon="🤖")
 st.title("🧠 니체 롤플레잉 챗봇")
 st.markdown("**‘신은 죽었다!’ - 삶과 존재를 향한 철학적 대화**")
 
-# 비밀키 불러오기
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# 비밀키 불러오기 (Streamlit Secrets → 환경변수 순)
+openai.api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+
+if not openai.api_key:
+    st.error("❌ OpenAI API 키가 설정되지 않았습니다. secrets.toml 또는 환경변수를 확인하세요.")
+    st.stop()
 
 # 초기 프롬프트 설정
 system_prompt = """
